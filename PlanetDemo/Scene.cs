@@ -45,10 +45,8 @@ namespace PlanetDemo
         public void Update(GameTime gameTime)
         {
             camera.Update(gameTime);
-            if (InputManager.Instance.KeyPressed(Keys.PageUp))
-                planet.LevelOfSubdivision++;
-            if (InputManager.Instance.KeyPressed(Keys.PageDown))
-                planet.LevelOfSubdivision--;
+
+
             if (InputManager.Instance.KeyPressed(Keys.Z))
                 wireframe = !wireframe;
             if (InputManager.Instance.KeyPressed(Keys.N))
@@ -60,7 +58,7 @@ namespace PlanetDemo
             planet.Draw(camera, graphics, gameTime, wireframe);
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "PageUP to increase sphere divisions \n PageDown to decrease it \n Z to turn wireframe on \n N to generate new planet \n Esc to exit application \n Currently drawing " + planet.VerticiesToDraw.Length / 3 + " polygons", new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font, "Z to turn wireframe on \n N to generate new planet \n Esc to exit application \n Currently drawing " + planet.VerticiesToDraw.Length / 3 + " polygons", new Vector2(0, 0), Color.White);
             spriteBatch.End();
         }
     }

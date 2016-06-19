@@ -10,11 +10,13 @@ namespace PlanetDemo
 {
     public class Triangle
     {
+        bool subdivided;
         int levelOfSubdivision;
+
         Triangle[] triangles;
         VertexPositionColor[] verticies;
 
-        public Triangle(Vector3 p1, Vector3 p2, Vector3 p3, int los = 0)
+        public Triangle(Vector3 p1, Vector3 p2, Vector3 p3, int los = 0, bool sub = false)
         {
             verticies = new VertexPositionColor[3];
             verticies[0].Position = p1;
@@ -22,11 +24,12 @@ namespace PlanetDemo
             verticies[2].Position = p3;
 
             levelOfSubdivision = los;
+            subdivided = sub;
         }
 
         public void Subdivide()
         {
-            if (triangles != null)
+            if (subdivided)
                 foreach (Triangle t in triangles)
                     t.Subdivide();
             else
@@ -41,6 +44,8 @@ namespace PlanetDemo
                 triangles[1] = new Triangle(verticies[1].Position, b, a, levelOfSubdivision + 1);
                 triangles[2] = new Triangle(verticies[2].Position, c, b, levelOfSubdivision + 1);
                 triangles[3] = new Triangle(a, b, c, levelOfSubdivision + 1);
+
+                subdivided = true;
             }
         }
 
@@ -51,17 +56,14 @@ namespace PlanetDemo
             return ret;
         }
 
-        public List<VertexPositionColor> GetVerticies(int los)
+        public List<VertexPositionColor> GetVerticies()
         {
             List<VertexPositionColor> output = new List<VertexPositionColor>();
 
-            if (los > levelOfSubdivision && triangles == null)
-                Subdivide();
-
-            if (los > levelOfSubdivision)
+            if (subdivided)
                 foreach (Triangle t in triangles)
                     output.AddRange(t.GetVerticies(los));
-            else if (los == levelOfSubdivision)
+            else
                 foreach (VertexPositionColor v in verticies)
                     output.Add(v);
             return output;

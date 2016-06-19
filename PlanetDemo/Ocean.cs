@@ -87,6 +87,9 @@ namespace PlanetDemo
             Triangles.Add(new Triangle(p8, p7, p6));
             Triangles.Add(new Triangle(p9, p1, p8));
 
+            for (int i = 0; i < 4; i++)
+                SubdivideSphere();
+
             UpdateVertsToDraw();
         }
 
@@ -95,11 +98,17 @@ namespace PlanetDemo
             waterEffect = content.Load<Effect>("Water");
         }
 
+        public void SubdivideSphere()
+        {
+            foreach (Triangle t in Triangles)
+                t.Subdivide();
+        }
+
         void UpdateVertsToDraw()
         {
             List<VertexPositionColor> v = new List<VertexPositionColor>();
             foreach (Triangle t in Triangles)
-                v.AddRange(t.GetVerticies(levelOfSubdivision));
+                v.AddRange(t.GetVerticies());
             VerticiesToDraw = v.ToArray();
 
             DisplaceVerts();

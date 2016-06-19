@@ -30,13 +30,6 @@ namespace PlanetDemo
         List<Triangle> Triangles;
         public VertexPositionColor[] VerticiesToDraw;
 
-        int levelOfSubdivision = 4;
-        public int LevelOfSubdivision
-        {
-            get { return levelOfSubdivision; }
-            set { levelOfSubdivision = value; UpdateVertsToDraw(); }
-        }
-
         public Planet(Vector3 position, Quaternion rotation, Vector3 scale)
         {
             rng = new Random();
@@ -100,6 +93,9 @@ namespace PlanetDemo
             Triangles.Add(new Triangle(p8, p7, p6));
             Triangles.Add(new Triangle(p9, p1, p8));
 
+            for (int i = 0; i < 4; i++)
+                SubdivideSphere();
+
             UpdateVertsToDraw();
             ocean = new Ocean(position, scale * 1.095f, new Color((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1));
             GroundColor = new Vector4((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1);
@@ -112,11 +108,17 @@ namespace PlanetDemo
             ocean.LoadContent(content);
         }
 
+        public void SubdivideSphere()
+        {
+            foreach (Triangle t in Triangles)
+                t.Subdivide();
+        }
+
         void UpdateVertsToDraw()
         {
             List<VertexPositionColor> v = new List<VertexPositionColor>();
             foreach (Triangle t in Triangles)
-                v.AddRange(t.GetVerticies(levelOfSubdivision));
+                v.AddRange(t.GetVerticies());
             VerticiesToDraw = v.ToArray();
 
             DisplaceVerts();
