@@ -62,7 +62,7 @@ namespace PlanetDemo
 
             if (subdivided)
                 foreach (Triangle t in triangles)
-                    output.AddRange(t.GetVerticies(los));
+                    output.AddRange(t.GetVerticies());
             else
                 foreach (VertexPositionColor v in verticies)
                     output.Add(v);
