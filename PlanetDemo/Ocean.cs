@@ -24,8 +24,6 @@ namespace PlanetDemo
         List<Triangle> Triangles;
         public VertexPositionColor[] VerticiesToDraw;
 
-        int levelOfSubdivision = 4;
-
         public Ocean(Vector3 position, Vector3 scale, Color color)
         {
             waterColor = color;

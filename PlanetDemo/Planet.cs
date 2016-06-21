@@ -16,12 +16,14 @@ namespace PlanetDemo
 
         Vector4 GroundColor, CoastColor;
 
+        Camera3D camera;
+
         public Vector3 Scale;
         public Vector3 Position;
         public Quaternion Rotation;
 
         Matrix world { get { return Matrix.CreateWorld(Position, Vector3.Transform(Vector3.Forward, Rotation), Vector3.Transform(Vector3.Up, Rotation)); } }
-        Matrix transform { get { return Matrix.Multiply(Matrix.CreateTranslation(Position), Matrix.CreateScale(Scale)); } }
+        public Matrix Transform { get { return Matrix.Multiply(Matrix.CreateTranslation(Position), Matrix.CreateScale(Scale)); } }
         
         OpenSimplexNoise noise;
 
@@ -30,7 +32,9 @@ namespace PlanetDemo
         List<Triangle> Triangles;
         public VertexPositionColor[] VerticiesToDraw;
 
-        public Planet(Vector3 position, Quaternion rotation, Vector3 scale)
+        Tessellation Tessellation;
+
+        public Planet(Vector3 position, Quaternion rotation, Vector3 scale, Camera3D cam)
         {
             rng = new Random();
 
@@ -38,6 +42,8 @@ namespace PlanetDemo
             Rotation = rotation;
             Scale = scale;
             noise = new OpenSimplexNoise();
+            camera = cam;
+
             float t = (float)((1 + Math.Sqrt(5.0)) / 2.0);
 
             Vector3 p0 = new Vector3(-1, t, 0);
@@ -100,12 +106,19 @@ namespace PlanetDemo
             ocean = new Ocean(position, scale * 1.095f, new Color((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1));
             GroundColor = new Vector4((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1);
             CoastColor = new Vector4((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1);
+
+            Tessellation = new Tessellation(cam, Triangles, this);
         }
 
         public void LoadContent(ContentManager content)
         {
             planetEffect = content.Load<Effect>("Planet");
             ocean.LoadContent(content);
+        }
+
+        public void UnloadContent()
+        {
+            Tessellation.Kill();
         }
 
         public void SubdivideSphere()
@@ -121,18 +134,19 @@ namespace PlanetDemo
                 v.AddRange(t.GetVerticies());
             VerticiesToDraw = v.ToArray();
 
-            DisplaceVerts();
+            //DisplaceVerts();
+            VerticiesToDraw = DisplaceVerts(VerticiesToDraw);
         }
 
-        void DisplaceVerts()
+        public VertexPositionColor[] DisplaceVerts(VertexPositionColor[] vertsToDisplace)
         {
             VertexPositionColor vert = new VertexPositionColor();
             List<VertexPositionColor> vrts = new List<VertexPositionColor>();
 
-            foreach (VertexPositionColor vp in VerticiesToDraw)
+            foreach (VertexPositionColor vp in vertsToDisplace)
             {
                 vert = vp;
-                vert.Position = Vector3.Transform(vert.Position, transform);
+                vert.Position = Vector3.Transform(vert.Position, Transform);
                 vert.Position = Vector3.Transform(vert.Position, Rotation);
                 float fDisplace = Terrain(vert.Position);
                 Vector3 vDisplace = Vector3.Multiply(vert.Position, fDisplace);
@@ -140,10 +154,11 @@ namespace PlanetDemo
                 vert.Color = new Color(fDisplace * 4, fDisplace * 4, fDisplace * 4, 1);
                 vrts.Add(vert);
             }
-            VerticiesToDraw = vrts.ToArray();
+            //VerticiesToDraw = vrts.ToArray();
+            return vrts.ToArray();
         }
 
-        public void Draw(Camera3D camera, GraphicsDeviceManager graphics, GameTime gameTime, bool wireframe = false)
+        public void Draw(GraphicsDeviceManager graphics, GameTime gameTime, bool wireframe = false)
         {
             graphics.GraphicsDevice.BlendState = BlendState.Opaque;
             graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;

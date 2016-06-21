@@ -32,7 +32,7 @@ namespace PlanetDemo
             cnt = Content;
             //sphere = new IcoSphere();
             //sphere.LoadContent(Content);
-            planet = new Planet(Vector3.Zero, Quaternion.Identity, new Vector3(10));
+            planet = new Planet(Vector3.Zero, Quaternion.Identity, new Vector3(10), camera);
             planet.LoadContent(Content);
             //camera.CameraMovementSpeed *= 10;
 
@@ -40,7 +40,7 @@ namespace PlanetDemo
         }
         public void UnloadContent()
         {
-
+            planet.UnloadContent();
         }
         public void Update(GameTime gameTime)
         {
@@ -55,7 +55,7 @@ namespace PlanetDemo
         public void Draw(SpriteBatch spriteBatch, GraphicsDeviceManager graphics, GameTime gameTime)
         {
             //sphere.DrawSphere(camera, graphics);
-            planet.Draw(camera, graphics, gameTime, wireframe);
+            planet.Draw(graphics, gameTime, wireframe);
 
             spriteBatch.Begin();
             spriteBatch.DrawString(font, "Z to turn wireframe on \n N to generate new planet \n Esc to exit application \n Currently drawing " + planet.VerticiesToDraw.Length / 3 + " polygons", new Vector2(0, 0), Color.White);
