@@ -50,7 +50,10 @@ namespace PlanetDemo
             if (InputManager.Instance.KeyPressed(Keys.Z))
                 wireframe = !wireframe;
             if (InputManager.Instance.KeyPressed(Keys.N))
+            {
+                planet.UnloadContent();
                 LoadContent(cnt);
+            }
         }
         public void Draw(SpriteBatch spriteBatch, GraphicsDeviceManager graphics, GameTime gameTime)
         {

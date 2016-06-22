@@ -17,11 +17,11 @@ namespace PlanetDemo
         const int LOW_REOLUTION_LOD = 4;
 
         Thread TessellationThread;
-        bool runThread;
+        volatile bool runThread;
 
-        Camera3D camera;
-        List<Triangle> triangles;
-        Planet planet;
+        volatile Camera3D camera;
+        volatile List<Triangle> triangles;
+        volatile Planet planet;
 
         public Tessellation(Camera3D c, List<Triangle> t, Planet p)
         {

@@ -30,7 +30,7 @@ namespace PlanetDemo
         Effect planetEffect;
 
         List<Triangle> Triangles;
-        public VertexPositionColor[] VerticiesToDraw;
+        public volatile VertexPositionColor[] VerticiesToDraw;
 
         Tessellation Tessellation;
 
