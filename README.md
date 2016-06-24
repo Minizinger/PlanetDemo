@@ -7,6 +7,8 @@ Here are some results:
 
 It also includes dynamic LOD, which still requires some tuning. I am also not at all satisfied with the way planets look, so one day I will have to come back to it and change some things.
 
+You can see video preview of it in work [here](https://youtu.be/G_tHhOffcnc)
+
 I don't consider it finished just yet, there are many things to improve, but I will probably stop working on it for some time.  
 If by any chance you want to use it (fully or some parts of it) - you are totally free to.
 
